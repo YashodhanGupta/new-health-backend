@@ -1,6 +1,6 @@
 import User from "../models/UserSchema.js";
 import Doctor from "../models/DoctorSchema.js";
-import bcrypt from "bcryptjs";
+import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
 const generateToken = (user) => {
