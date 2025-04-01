@@ -7,21 +7,21 @@ import Stripe from 'stripe'
 export const getCheckoutSession =async (req, res) =>{
     try {
         const doctor=await Doctor.findById(req.params.doctorId)
-        const user= await Doctor.findById(req.userId)
+        const user= await User.findById(req.userId)
 
         const stripe=new Stripe(process.env.STRIPE_SECRET_KEY)
 
-        const session=await stripe.checkout.session.create({
+        const session=await stripe.checkout.sessions.create({
             payment_method_types:['card'],
             mode:'payment',
             success_url:`${process.env.CLIENT_SITE_URL}/checkout-success`,
-            cancel_url:`${process.env}://${req.get('host')}/doctors/${doctor.id}`,
+            cancel_url:`${req.protocol}://${req.get('host')}/doctors/${doctor.id}`,
             customer_email:user.email,
             client_reference_id:req.params.doctorId,
             line_items:[
                 {
                     price_data:{
-                        currency:'bdt',
+                        currency:'usd',
                         unit_amount:doctor.ticketPrice * 100,
                         product_data:{
                             name:doctor.name,
@@ -45,7 +45,7 @@ export const getCheckoutSession =async (req, res) =>{
 
         await booking.save()
 
-        res.send(200).json({success:true, message:'Successfully paid',session})
+        res.status(200).json({success:true, message:'Successfully paid',session})
         
     } catch (err) {
         res.status(500).json({success:false,message:'Error creating checkout session'})
