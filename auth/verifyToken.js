@@ -20,7 +20,7 @@ export const authenticate = async (req, res, next) => {
     
     next();
   } catch (error) {
-    return res.status(401).json({ success: false, message: "Invalid token" });
+    return res.status(401).json({ success: false, message: "Invalid user. Please refresh the page" });
   }
 };
 
