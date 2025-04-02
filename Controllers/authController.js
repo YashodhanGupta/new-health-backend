@@ -80,14 +80,18 @@ export const login = async (req, res) => {
   const { email, password } = req.body;
   try {
     let user = null;
+    let doctorId = null;
+
     const patient = await User.findOne({ email });
 
     const doctor = await Doctor.findOne({ email });
+    
     if (patient) {
       user = patient;
     }
     if (doctor) {
       user = doctor;
+      doctorId = doctor._id;
     }
 
     // check if user exist or not
@@ -114,6 +118,7 @@ export const login = async (req, res) => {
       token,
       data: { ...rest },
       role,
+      doctorId,
     });
   } catch (error) {
     return res.status(500).json({ status: false, message: "failed to login" });

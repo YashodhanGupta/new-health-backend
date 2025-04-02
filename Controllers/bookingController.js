@@ -49,4 +49,20 @@ export const getCheckoutSession = async (req, res) => {
       res.status(500).json({ success: false, message: 'Try Again' });
     }
   };
-  
+
+  export const getAllBookings = async (req, res) => {
+    try {
+      const { doctorId } = req.query; // Get doctor ID from request query
+
+      if (!doctorId) {
+          return res.status(400).json({ success: false, message: "Doctor ID is required" });
+      }
+
+      const bookings = await Booking.find({ doctor: doctorId }).populate("user", "name email photo");
+
+      res.status(200).json({ success: true, data: bookings });
+  } catch (error) {
+      console.error(error);
+      res.status(500).json({ success: false, message: "Server error" });
+  }
+};
